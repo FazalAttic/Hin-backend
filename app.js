@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -13,7 +15,31 @@ const sendOtpRoute = require("./routes/auth/sendOtp");
 const verifyOtpRoute = require("./routes/auth/verifyOtp");
 const cloudinaryRouter = require("./routes/cloudinary");
 
+// Swagger setup
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'HinAnime API',
+      version: '1.0.0',
+      description: 'API documentation for HinAnime backend',
+    },
+  },
+  apis: ['./routes/**/*.js'], // Path to your route files
+};
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+
+
 dotenv.config();
+
+// Set global __DEV__ variable based on ENVIRONMENT
+global.__DEV__ = process.env.ENVIRONMENT === "DEV";
+
+
 
 // Validate environment variables
 const requiredEnvVars = [
@@ -47,6 +73,14 @@ if (!origins.every((url) => /^https?:\/\/.+$/.test(url))) {
 }
 
 const app = express();
+
+if (__DEV__) {
+  const listEndpoints = require('express-list-endpoints');
+  console.log('Registered endpoints:', listEndpoints(app));
+}
+
+// Ensure /swagger route is registered before other routes
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Connect to MongoDB
 connectDB();
@@ -89,10 +123,10 @@ const apiLimiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
-const authorisedClients = ["https://hinanime.site", "http://localhost:3000"];
+const authorisedClients = ["https://hinanime.site", "http://localhost:3000", "http://127.0.0.1:5000"];
 
 app.use((req, res, next) => {
-  if (!authorisedClients.includes(req.headers.origin)) {
+  if (!authorisedClients.includes(req.headers.origin) && !global.__DEV__) {
     res.json({
       status: 401,
       error: "Unauthorized",

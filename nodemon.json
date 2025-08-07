@@ -1,0 +1,12 @@
+{
+  "watch": [
+    "./"
+  ],
+  "ext": "js,json",
+  "ignore": [
+    "node_modules",
+    "*.log"
+  ],
+  "legacyWatch": true,
+  "polling": true
+}
