@@ -93,17 +93,6 @@ const authorisedClients = ["https://hinanime.site", "http://localhost:3000"];
 app.get('/', (req, res) => {
   res.status(200).send('Backend is live');
 });
-app.use((req, res, next) => {
-  if (!authorisedClients.includes(req.headers.origin)) {
-    res.json({
-      status: 401,
-      error: "Unauthorized",
-      message: "Authentication credentials were missing or invalid.",
-    });
-  }else{
-    next();
-  }
-});
 app.get("/debugRoute",(req,res)=>{
   console.log("Working Debug Route..")
   res.send("Route is working !!!")
