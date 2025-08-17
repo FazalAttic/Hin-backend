@@ -102,7 +102,10 @@ app.use((req, res, next) => {
     next();
   }
 });
-
+app.get("/debugRoute",(req,res)=>{
+  console.log("Working Debug Route..")
+  res.send("Route is working !!!")
+})
 app.use("/api/auth", apiLimiter);
 app.use("/api/cloudinary", apiLimiter);
 
