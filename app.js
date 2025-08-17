@@ -90,7 +90,9 @@ const apiLimiter = rateLimit({
 });
 
 const authorisedClients = ["https://hinanime.site", "http://localhost:3000"];
-
+app.get('/', (req, res) => {
+  res.status(200).send('Backend is live');
+});
 app.use((req, res, next) => {
   if (!authorisedClients.includes(req.headers.origin)) {
     res.json({
