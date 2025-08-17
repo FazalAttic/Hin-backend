@@ -89,10 +89,6 @@ const apiLimiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
-const authorisedClients = ["https://hinanime.site", "http://localhost:3000"];
-app.get('/', (req, res) => {
-  res.status(200).send('Backend is live');
-});
 app.get("/debugRoute",(req,res)=>{
   console.log("Working Debug Route..")
   res.send("Route is working !!!")
