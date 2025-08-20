@@ -88,7 +88,19 @@ const apiLimiter = rateLimit({
   max: 100,
   message: "Too many requests, please try again later.",
 });
+const authorisedClients = ["https://hinanime.site", "http://localhost:3000"];
 
+app.use((req, res, next) => {
+  if (!authorisedClients.includes(req.headers.origin)) {
+    res.json({
+      status: 401,
+      error: "Unauthorized",
+      message: "Authentication credentials were missing or invalid.",
+    });
+  }else{
+    next();
+  }
+});
 app.get("/debugRoute",(req,res)=>{
   console.log("Working Debug Route..")
   res.send("Route is working !!!")

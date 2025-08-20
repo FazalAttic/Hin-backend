@@ -30,8 +30,7 @@ router.get("/updatedAt", async (req, res) => {
 // Get anime by slug
 router.get("/:slug", async (req, res) => {
   try {
-    const data = await Anime.find();
-    const anime = data.find((a) => createSlug(a.title) === req.params.slug);
+    const anime = await Anime.findOne({id:req.params.slug});
     if (!anime) {
       return res
         .status(404)
